@@ -88,7 +88,6 @@ const validateItem = (item: IMenuItem) => {
 
 export const validRoutes = (
   features: string[] | null | undefined,
-  licenseNotification: boolean = false,
 ) => {
   const ldapIsEnabled = (features && features.includes("ldap-idp")) || false;
   const kmsIsEnabled = (features && features.includes("kms")) || false;
@@ -108,13 +107,6 @@ export const validRoutes = (
       path: IAM_PAGES.ACCOUNT,
       name: "Access Keys",
       icon: <AccountsMenuIcon />,
-      forceDisplay: true,
-    },
-    {
-      group: "User",
-      path: "https://min.io/docs/minio/linux/index.html?ref=con",
-      name: "Documentation",
-      icon: <DocumentationIcon />,
       forceDisplay: true,
     },
     {
@@ -231,7 +223,6 @@ export const validRoutes = (
       name: "License",
       id: "license",
       icon: <LicenseIcon />,
-      badge: licenseNotification,
       forceDisplay: true,
     },
   ];

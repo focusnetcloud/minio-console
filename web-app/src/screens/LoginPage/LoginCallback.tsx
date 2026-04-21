@@ -108,8 +108,8 @@ const LoginCallback = () => {
     <Fragment>
       <LoginWrapper
         logoProps={{
-          applicationName: getLogoApplicationVariant(),
-          subVariant: getLogoVar(),
+          applicationName: "custom",
+          customLogoSrc: "/images/custom_logo.png",
         }}
         form={
           <CallBackContainer>
@@ -133,22 +133,6 @@ const LoginCallback = () => {
               Back to Login
             </Button>
           </CallBackContainer>
-        }
-        promoHeader={
-          <span style={{ fontSize: 28 }}>High-Performance Object Store</span>
-        }
-        promoInfo={
-          <span style={{ fontSize: 14, lineHeight: 1 }}>
-            MinIO is a cloud-native object store built to run on any
-            infrastructure - public, private or edge clouds. Primary use cases
-            include data lakes, databases, AI/ML, SaaS applications and fast
-            backup & recovery. MinIO is dual licensed under GNU AGPL v3 and
-            commercial license. To learn more, visit{" "}
-            <a href={"https://min.io/?ref=con"} target="_blank" rel="noopener">
-              www.min.io
-            </a>
-            .
-          </span>
         }
         backgroundAnimation={false}
       />

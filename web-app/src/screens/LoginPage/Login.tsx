@@ -24,10 +24,27 @@ import { useSelector } from "react-redux";
 import { getFetchConfigurationAsync } from "./loginThunks";
 import { resetForm } from "./loginSlice";
 import StrategyForm from "./StrategyForm";
-import { getLogoApplicationVariant, getLogoVar } from "../../config";
 import { RedirectRule } from "api/consoleApi";
 import { redirectRules } from "./login.utils";
 import { setHelpName } from "../../systemSlice";
+import styled from "styled-components";
+import get from "lodash/get";
+
+const LoginTitle = styled.div(({ theme }) => ({
+  fontSize: 28,
+  color: get(theme, "fontColor", "#000"),
+}));
+
+const LoginSubtitle = styled.div(({ theme }) => ({
+  fontSize: 14,
+  marginBottom: 40,
+  color: get(theme, "fontColor", "#000"),
+}));
+
+const ErrorText = styled.p(({ theme }) => ({
+  textAlign: "center",
+  color: get(theme, "fontColor", "#000"),
+}));
 
 export const getTargetPath = () => {
   let targetPath = "/browser";
@@ -52,9 +69,6 @@ const Login = () => {
     (state: AppState) => state.login.loadingFetchConfiguration,
   );
   const navigateTo = useSelector((state: AppState) => state.login.navigateTo);
-
-  const isK8S = useSelector((state: AppState) => state.login.isK8S);
-
   const backgroundAnimation = useSelector(
     (state: AppState) => state.login.backgroundAnimation,
   );
@@ -110,11 +124,11 @@ const Login = () => {
           ) : (
             <Fragment>
               <Box>
-                <p style={{ textAlign: "center" }}>
+                <ErrorText>
                   An error has occurred
                   <br />
                   The backend cannot be reached.
-                </p>
+                </ErrorText>
               </Box>
               <div className={"buttonRetry"}>
                 <Button
@@ -134,12 +148,6 @@ const Login = () => {
       );
   }
 
-  let docsURL = "https://min.io/docs/minio/linux/index.html?ref=con";
-  if (isK8S) {
-    docsURL =
-      "https://min.io/docs/minio/kubernetes/upstream/index.html?ref=con";
-  }
-
   useEffect(() => {
     dispatch(setHelpName("login"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -150,10 +158,16 @@ const Login = () => {
       <MainError />
       <LoginWrapper
         logoProps={{
-          applicationName: getLogoApplicationVariant(),
-          subVariant: getLogoVar(),
+          applicationName: "custom",
+          customLogoSrc: "/images/custom_logo.png",
         }}
-        form={loginComponent}
+        form={
+          <>
+            <LoginTitle>Object Storage</LoginTitle>
+            <LoginSubtitle>Exclusively hosted in Germany 🇩🇪</LoginSubtitle>
+            {loginComponent}
+          </>
+        }
         formFooter={
           <Box
             sx={{
@@ -163,50 +177,14 @@ const Login = () => {
               },
             }}
           >
-            <a href={docsURL} target="_blank" rel="noopener">
-              Documentation
-            </a>
-            <span className={"separator"}>|</span>
             <a
-              href="https://github.com/minio/minio"
-              target="_blank"
-              rel="noopener"
-            >
-              GitHub
-            </a>
-            <span className={"separator"}>|</span>
-            <a
-              href="https://subnet.min.io/?ref=con"
+              href="https://ioc.focusnet.de"
               target="_blank"
               rel="noopener"
             >
               Support
             </a>
-            <span className={"separator"}>|</span>
-            <a
-              href="https://min.io/download/?ref=con"
-              target="_blank"
-              rel="noopener"
-            >
-              Download
-            </a>
           </Box>
-        }
-        promoHeader={
-          <span style={{ fontSize: 28 }}>High-Performance Object Store</span>
-        }
-        promoInfo={
-          <span style={{ fontSize: 14, lineHeight: 1 }}>
-            MinIO is a cloud-native object store built to run on any
-            infrastructure - public, private or edge clouds. Primary use cases
-            include data lakes, databases, AI/ML, SaaS applications and fast
-            backup & recovery. MinIO is dual licensed under GNU AGPL v3 and
-            commercial license. To learn more, visit{" "}
-            <a href={"https://min.io/?ref=con"} target="_blank" rel="noopener">
-              www.min.io
-            </a>
-            .
-          </span>
         }
         backgroundAnimation={backgroundAnimation}
       />

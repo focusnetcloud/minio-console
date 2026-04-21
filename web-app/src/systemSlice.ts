@@ -17,8 +17,16 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { snackBarMessage, SRInfoStateType } from "./types";
 import { ErrorResponseHandler, IEmbeddedCustomStyles } from "./common/types";
 import { AppState } from "./store";
-import { SubnetInfo } from "./screens/Console/License/types";
 import { isDarkModeOn } from "./utils/stylesUtils";
+
+interface SubnetInfo {
+  account_id: number;
+  email: string;
+  expires_at: string;
+  plan: string;
+  storage_capacity: number;
+  organization: string;
+}
 
 // determine whether we have the sidebar state stored on localstorage
 const initSideBarOpen = localStorage.getItem("sidebarOpen")

@@ -14,130 +14,102 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment, useCallback, useEffect, useState } from "react";
-import { PageLayout, ProgressBar, Grid } from "mds";
-import { SubnetInfo } from "./types";
-import api from "../../../common/api";
-import LicensePlans from "./LicensePlans";
-import withSuspense from "../Common/Components/withSuspense";
-import { getLicenseConsent } from "./utils";
+import React, { Fragment, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { AGPLV3DarkLogo, Box, PageLayout } from "mds";
 import PageHeaderWrapper from "../Common/PageHeaderWrapper/PageHeaderWrapper";
 import { setHelpName } from "../../../systemSlice";
-import { useAppDispatch } from "../../../store";
-
-const LicenseConsentModal = withSuspense(
-  React.lazy(() => import("./LicenseConsentModal")),
-);
+import { AppState, useAppDispatch } from "../../../store";
 
 const License = () => {
-  const [activateProductModal, setActivateProductModal] =
-    useState<boolean>(false);
-
-  const [licenseInfo, setLicenseInfo] = useState<SubnetInfo>();
-  const [currentPlanID, setCurrentPlanID] = useState<number>(0);
-  const [loadingLicenseInfo, setLoadingLicenseInfo] = useState<boolean>(false);
-  const [initialLicenseLoading, setInitialLicenseLoading] =
-    useState<boolean>(true);
-  useState<boolean>(false);
-  const [clusterRegistered, setClusterRegistered] = useState<boolean>(false);
-
-  const [isLicenseConsentOpen, setIsLicenseConsentOpen] =
-    useState<boolean>(false);
-
-  const closeModalAndFetchLicenseInfo = () => {
-    setActivateProductModal(false);
-    fetchLicenseInfo();
-  };
-
   const dispatch = useAppDispatch();
+  const darkMode = useSelector((state: AppState) => state.system.darkMode);
   useEffect(() => {
     dispatch(setHelpName("license"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const isRegistered = licenseInfo && clusterRegistered;
-
-  const isAgplConsentDone = getLicenseConsent();
-
-  useEffect(() => {
-    const shouldConsent =
-      !isRegistered && !isAgplConsentDone && !initialLicenseLoading;
-
-    if (shouldConsent && !loadingLicenseInfo) {
-      setIsLicenseConsentOpen(true);
-    }
-  }, [
-    isRegistered,
-    isAgplConsentDone,
-    initialLicenseLoading,
-    loadingLicenseInfo,
-  ]);
-
-  const fetchLicenseInfo = useCallback(() => {
-    if (loadingLicenseInfo) {
-      return;
-    }
-    setLoadingLicenseInfo(true);
-    api
-      .invoke("GET", `/api/v1/subnet/info`)
-      .then((res: SubnetInfo) => {
-        if (res) {
-          if (res.plan === "STANDARD") {
-            setCurrentPlanID(1);
-          } else if (
-            ["ENTERPRISE", "ENTERPRISE-LITE", "ENTERPRISE-PLUS"].includes(
-              res.plan,
-            )
-          ) {
-            setCurrentPlanID(2);
-          } else {
-            setCurrentPlanID(1);
-          }
-          setLicenseInfo(res);
-        }
-        setClusterRegistered(true);
-        setLoadingLicenseInfo(false);
-      })
-      .catch(() => {
-        setClusterRegistered(false);
-        setLoadingLicenseInfo(false);
-      });
-  }, [loadingLicenseInfo]);
-
-  useEffect(() => {
-    if (initialLicenseLoading) {
-      fetchLicenseInfo();
-      setInitialLicenseLoading(false);
-    }
-  }, [fetchLicenseInfo, initialLicenseLoading, setInitialLicenseLoading]);
-
-  if (loadingLicenseInfo) {
-    return (
-      <Grid item xs={12}>
-        <ProgressBar />
-      </Grid>
-    );
-  }
+  const linkSx = {
+    color: "#2781B0",
+    fontWeight: 600,
+  };
 
   return (
     <Fragment>
-      <PageHeaderWrapper label="MinIO License and Support Plan" />
+      <PageHeaderWrapper label="License" />
 
       <PageLayout>
-        <LicensePlans
-          activateProductModal={activateProductModal}
-          closeModalAndFetchLicenseInfo={closeModalAndFetchLicenseInfo}
-          licenseInfo={licenseInfo}
-          currentPlanID={currentPlanID}
-          setActivateProductModal={setActivateProductModal}
-        />
-
-        <LicenseConsentModal
-          isOpen={isLicenseConsentOpen}
-          onClose={() => {
-            setIsLicenseConsentOpen(false);
+        <Box
+          sx={{
+            marginTop: "40px",
+            padding: "0 30px",
+            "& a": linkSx,
           }}
-        />
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              marginBottom: "40px",
+              justifyContent: "center",
+              "& .min-icon": {
+                width: "188px",
+                height: "62px",
+                filter: darkMode ? "brightness(0) invert(1)" : undefined,
+              },
+            }}
+          >
+            <AGPLV3DarkLogo />
+          </Box>
+          <Box sx={{ marginBottom: "20px" }}>
+            This software is licensed under the{" "}
+            <a
+              href="https://www.gnu.org/licenses/agpl-3.0.html"
+              rel="noopener"
+            >
+              GNU Affero General Public License v3.0
+            </a>
+            .
+          </Box>
+          <Box sx={{ marginBottom: "20px" }}>
+            This application is based on MinIO Console and MinIO Design System,
+            originally developed by MinIO, Inc., and modified by Focusnet GmbH
+            in 2026.
+          </Box>
+          <Box sx={{ marginBottom: "20px" }}>
+            In accordance with the AGPL v3, the complete corresponding source
+            code of this modified software is available at:
+          </Box>
+          <ul
+            style={{
+              marginBottom: "20px",
+              paddingLeft: "20px",
+            }}
+          >
+            <li>
+              <a
+                href="https://github.com/focusnetcloud/minio-console"
+                rel="noopener"
+              >
+                github.com/focusnetcloud/minio-console
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://github.com/focusnetcloud/minio-mds"
+                rel="noopener"
+              >
+                github.com/focusnetcloud/minio-mds
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com/minio/minio" rel="noopener">
+                github.com/minio/minio
+              </a>
+              {" "}(unmodified)
+            </li>
+          </ul>
+        </Box>
       </PageLayout>
     </Fragment>
   );

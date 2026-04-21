@@ -21,13 +21,8 @@ import { AppState, useAppDispatch } from "../../../store";
 import { validRoutes } from "../valid-routes";
 import { menuOpen } from "../../../systemSlice";
 import { selFeatures } from "../consoleSlice";
-import {
-  getLogoApplicationVariant,
-  getLogoVar,
-  registeredCluster,
-} from "../../../config";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getLicenseConsent } from "../License/utils";
+
 
 const MenuWrapper = () => {
   const dispatch = useAppDispatch();
@@ -38,21 +33,8 @@ const MenuWrapper = () => {
   const sidebarOpen = useSelector(
     (state: AppState) => state.system.sidebarOpen,
   );
-  const licenseInfo = useSelector(
-    (state: AppState) => state?.system?.licenseInfo,
-  );
 
-  const isAgplAckDone = getLicenseConsent();
-  const clusterRegistered = registeredCluster();
-
-  const { plan = "" } = licenseInfo || {};
-
-  let licenseNotification = true;
-  if (plan || isAgplAckDone || clusterRegistered) {
-    licenseNotification = false;
-  }
-
-  const allowedMenuItems = validRoutes(features, licenseNotification);
+  const allowedMenuItems = validRoutes(features);
 
   return (
     <Menu
@@ -60,8 +42,8 @@ const MenuWrapper = () => {
       displayGroupTitles
       options={allowedMenuItems}
       applicationLogo={{
-        applicationName: getLogoApplicationVariant(),
-        subVariant: getLogoVar(),
+        applicationName: "customwhite",
+        customLogoSrc: "/images/custom_logo.png",
       }}
       callPathAction={(path) => {
         navigate(path);
@@ -74,6 +56,8 @@ const MenuWrapper = () => {
       }}
       currentPath={pathname}
       mobileModeAuto={false}
+      collapsedIcon={<img src="/safari-pinned-tab.svg" style={{ maxWidth: "70%", maxHeight: "70%", marginTop: "7px",
+         filter: "brightness(0) invert(1)" }} />}
     />
   );
 };

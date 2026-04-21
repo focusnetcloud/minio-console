@@ -1,8 +1,13 @@
+> **Notice:** This is a modified version of [MinIO Console](https://github.com/minio/console),
+> customized for use by Focusnet Cloud Services. The original repository has been
+> deleted by its maintainers. This copy is published in compliance with the
+> [GNU AGPLv3](LICENSE) license under which the original code was released.
+
 # MinIO Console
 
-![build](https://github.com/minio/console/workflows/Go/badge.svg) ![license](https://img.shields.io/badge/license-AGPL%20V3-blue)
+![license](https://img.shields.io/badge/license-AGPL%20V3-blue)
 
-A graphical user interface for [MinIO](https://github.com/minio/minio)
+A graphical user interface for [MinIO](https://min.io)
 
 | Object Browser                     | Dashboard                     | Creating a bucket             |
 |------------------------------------|-------------------------------|-------------------------------|
@@ -21,7 +26,6 @@ A graphical user interface for [MinIO](https://github.com/minio/minio)
   - [Start Console service:](#start-console-service)
   - [Start Console service with TLS:](#start-console-service-with-tls)
   - [Connect Console to a Minio using TLS and a self-signed certificate](#connect-console-to-a-minio-using-tls-and-a-self-signed-certificate)
-- [Contribute to console Project](#contribute-to-console-project)
 
 <!-- markdown-toc end -->
 
@@ -211,7 +215,3 @@ the `CONSOLE_DEBUG_LOGLEVEL` environment variable to one of the following values
  - Duration of the request
 
 The detailed logging also includes all request and response headers (if any).
- 
-# Contribute to console Project
-
-Please follow console [Contributor's Guide](https://github.com/minio/console/blob/master/CONTRIBUTING.md)
